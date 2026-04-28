@@ -5,132 +5,180 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Follow-Up Doctor Directory</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f7f9;
-      color: #0b1f3a;
+      font-family: "Figtree", Arial, sans-serif;
+      background: #f4f7fb;
+      color: #10233f;
     }
 
     header {
-      background: linear-gradient(135deg, #003b71, #006b5f);
+      background: linear-gradient(135deg, #082b5f, #006b6f);
       color: white;
-      padding: 30px 20px;
+      padding: 34px 20px;
       text-align: center;
     }
 
     header h1 {
       margin: 0;
-      font-size: 32px;
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
     }
 
     header p {
       margin: 10px 0 0;
       font-size: 18px;
+      font-weight: 500;
+      opacity: 0.95;
     }
 
     .container {
       max-width: 1100px;
-      margin: 30px auto;
-      padding: 0 20px;
+      margin: 28px auto;
+      padding: 0 18px;
+    }
+
+    .date-card {
+      background: white;
+      border-radius: 20px;
+      padding: 22px 24px;
+      margin-bottom: 22px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+      border-left: 8px solid #b58a2a;
+    }
+
+    .date-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .date-text {
+      margin-top: 6px;
+      font-size: 28px;
+      font-weight: 900;
+      color: #082b5f;
     }
 
     .notice {
-      background: #fff7e6;
-      border-left: 6px solid #c99a2e;
+      background: #fff8e8;
+      border: 1px solid #f1d79b;
       padding: 16px 20px;
-      margin-bottom: 25px;
-      border-radius: 10px;
+      margin-bottom: 24px;
+      border-radius: 16px;
       font-size: 17px;
+      font-weight: 600;
+      color: #5b4212;
+    }
+
+    .zone-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
     }
 
     .zone-card {
       background: white;
-      border-radius: 18px;
-      margin-bottom: 28px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      border-radius: 22px;
       overflow: hidden;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+      min-height: 320px;
     }
 
     .zone-title {
       color: white;
-      padding: 18px 24px;
+      padding: 22px;
       font-size: 24px;
-      font-weight: bold;
+      font-weight: 900;
+      text-align: center;
     }
 
-    .az1 { background: #003b71; }
-    .az2 { background: #006b5f; }
-    .bz2 { background: #5b2c83; }
+    .az1 { background: #082b5f; }
+    .az2 { background: #006b6f; }
+    .bz2 { background: #56318d; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 20px;
+    .doctor-list {
+      padding: 12px 20px 22px;
     }
 
-    th {
-      background: #eef5f3;
-      text-align: left;
-      padding: 16px;
-      color: #063f34;
+    .doctor-row {
+      padding: 18px 0;
+      border-bottom: 1px solid #e8edf3;
     }
 
-    td {
-      padding: 18px 16px;
-      border-bottom: 1px solid #e5e5e5;
-    }
-
-    tr:last-child td {
+    .doctor-row:last-child {
       border-bottom: none;
     }
 
-    .room {
-      font-weight: bold;
-      color: #003b71;
+    .doctor-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: #10233f;
+      line-height: 1.25;
     }
 
     .empty {
-      padding: 20px;
+      padding: 28px 20px;
       color: #777;
-      font-size: 18px;
+      font-size: 17px;
+      font-weight: 600;
+      text-align: center;
     }
 
     .last-updated {
       text-align: center;
       font-size: 14px;
-      color: #666;
-      margin-top: 20px;
+      color: #667;
+      margin-top: 22px;
+      font-weight: 600;
     }
 
     footer {
       text-align: center;
-      padding: 25px;
-      background: #0b1f3a;
+      padding: 26px 18px;
+      background: #10233f;
       color: white;
-      margin-top: 40px;
+      margin-top: 36px;
       font-size: 16px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 900px) {
+      .zone-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 600px) {
       header h1 {
-        font-size: 25px;
+        font-size: 26px;
       }
 
       header p {
         font-size: 15px;
       }
 
-      table {
-        font-size: 16px;
-      }
-
-      th, td {
-        padding: 12px;
+      .date-text {
+        font-size: 23px;
       }
 
       .zone-title {
+        font-size: 21px;
+      }
+
+      .doctor-name {
         font-size: 20px;
       }
     }
@@ -141,12 +189,18 @@
 
   <header>
     <h1>FOLLOW-UP DOCTOR DIRECTORY</h1>
-    <p>Please check your doctor, zone and clinic room before proceeding.</p>
+    <p>Please check your doctor and assigned zone before proceeding.</p>
   </header>
 
   <div class="container">
+
+    <div class="date-card">
+      <div class="date-label">Today’s Directory</div>
+      <div class="date-text" id="displayDate">Loading date...</div>
+    </div>
+
     <div class="notice">
-      Doctor locations may change daily. Kindly confirm your details before proceeding.
+      Doctor locations and zone assignments may change daily. Kindly confirm your details before proceeding.
     </div>
 
     <div id="directory">Loading doctor directory...</div>
@@ -179,20 +233,46 @@
       }
     ];
 
+    function getTodayMY() {
+      return new Date().toLocaleDateString("en-GB", {
+        timeZone: "Asia/Kuala_Lumpur",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+      });
+    }
+
+    function getDisplayDate() {
+      return new Date().toLocaleDateString("en-MY", {
+        timeZone: "Asia/Kuala_Lumpur",
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      });
+    }
+
     async function loadDirectory() {
       try {
+        document.getElementById("displayDate").innerText = getDisplayDate();
+
         const response = await fetch(SHEET_CSV_URL + "&cacheBust=" + Date.now());
         const csvText = await response.text();
         const data = parseCSV(csvText);
 
+        const today = getTodayMY();
+
         const activeDoctors = data.filter(row =>
-          clean(row["Status"]).toLowerCase() === "active"
+          clean(row["Status"]).toLowerCase() === "active" &&
+          clean(row["Date"]) === today
         );
 
         renderDirectory(activeDoctors);
 
         document.getElementById("lastUpdated").innerText =
-          "Last updated: " + new Date().toLocaleString("en-MY");
+          "Last updated: " + new Date().toLocaleString("en-MY", {
+            timeZone: "Asia/Kuala_Lumpur"
+          });
 
       } catch (error) {
         document.getElementById("directory").innerHTML =
@@ -251,6 +331,9 @@
       const container = document.getElementById("directory");
       container.innerHTML = "";
 
+      const grid = document.createElement("div");
+      grid.className = "zone-grid";
+
       zones.forEach(zone => {
         const doctors = data.filter(row => matchesZone(row["Zone"], zone));
 
@@ -262,34 +345,26 @@
           ${
             doctors.length > 0
               ? `
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Doctor's Name</th>
-                      <th>Room</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    ${doctors.map(doc => `
-                      <tr>
-                        <td>${doc["Doctor Name"] || "-"}</td>
-                        <td class="room">${doc["Room"] || "-"}</td>
-                      </tr>
-                    `).join("")}
-                  </tbody>
-                </table>
+                <div class="doctor-list">
+                  ${doctors.map(doc => `
+                    <div class="doctor-row">
+                      <div class="doctor-name">${doc["Doctor Name"] || "-"}</div>
+                    </div>
+                  `).join("")}
+                </div>
               `
               : `<div class="empty">No doctor listed for this zone at the moment.</div>`
           }
         `;
 
-        container.appendChild(card);
+        grid.appendChild(card);
       });
+
+      container.appendChild(grid);
     }
 
     loadDirectory();
 
-    // Auto refresh every 5 minutes
     setInterval(loadDirectory, 300000);
   </script>
 
