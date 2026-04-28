@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doctor Zone Directory</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f8fb;
+      color: #0b1f3a;
+    }
+
+    header {
+      background: linear-gradient(135deg, #003b71, #006b5f);
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 34px;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .notice {
+      background: #fff7e6;
+      border-left: 6px solid #c99a2e;
+      padding: 16px 20px;
+      margin-bottom: 25px;
+      border-radius: 10px;
+      font-size: 17px;
+    }
+
+    .zone-card {
+      background: white;
+      border-radius: 18px;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .zone-title {
+      background: #063f34;
+      color: white;
+      padding: 18px 24px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 20px;
+    }
+
+    th {
+      background: #eef5f3;
+      text-align: left;
+      padding: 16px;
+      color: #063f34;
+    }
+
+    td {
+      padding: 18px 16px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .room {
+      font-weight: bold;
+      color: #003b71;
+    }
+
+    .empty {
+      padding: 20px;
+      color: #777;
+      font-size: 18px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      background: #0b1f3a;
+      color: white;
+      margin-top: 40px;
+      font-size: 16px;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 26px;
+      }
+
+      table {
+        font-size: 16px;
+      }
+
+      .zone-title {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>FOLLOW-UP DOCTOR DIRECTORY</h1>
+    <p>Please check your doctor, zone and clinic room before proceeding.</p>
+  </header>
+
+  <div class="container">
+    <div class="notice">
+      Doctor locations may change daily. Kindly confirm your details before proceeding.
+    </div>
+
+    <div id="directory"></div>
+  </div>
+
+  <footer>
+    Need assistance? Please approach our staff. Thank you for your cooperation.
+  </footer>
+
+  <script>
+    const SHEET_CSV_URL = "PASTE_YOUR_GOOGLE_SHEET_CSV_LINK_HERE";
+
+    const zones = [
+      "OPD A Zone 1",
+      "OPD A Zone 2",
+      "OPD B Zone 2"
+    ];
+
+    async function loadDirectory() {
+      try {
+        const response = await fetch(SHEET_CSV_URL);
+        const csvText = await response.text();
+        const data = parseCSV(csvText);
+
+        const activeDoctors = data.filter(row =>
+          row["Status"] &&
+          row["Status"].toLowerCase().trim() === "active"
+        );
+
+        renderDirectory(activeDoctors);
+      } catch (error) {
+        document.getElementById("directory").innerHTML =
+          "<p>Unable to load doctor directory. Please contact staff for assistance.</p>";
+      }
+    }
+
+    function parseCSV(text) {
+      const rows = text.trim().split("\n").map(row => row.split(","));
+      const headers = rows.shift().map(h => h.trim());
+
+      return rows.map(row => {
+        let obj = {};
+        headers.forEach((header, index) => {
+          obj[header] = row[index] ? row[index].trim() : "";
+        });
+        return obj;
+      });
+    }
+
+    function renderDirectory(data) {
+      const container = document.getElementById("directory");
+      container.innerHTML = "";
+
+      zones.forEach(zone => {
+        const doctors = data.filter(row => row["Zone"] === zone);
+
+        const card = document.createElement("div");
+        card.className = "zone-card";
+
+        card.innerHTML = `
+          <div class="zone-title">${zone}</div>
+          ${
+            doctors.length > 0
+              ? `
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Doctor's Name</th>
+                      <th>Room</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${doctors.map(doc => `
+                      <tr>
+                        <td>${doc["Doctor Name"]}</td>
+                        <td class="room">${doc["Room"]}</td>
+                      </tr>
+                    `).join("")}
+                  </tbody>
+                </table>
+              `
+              : `<div class="empty">No doctor listed for this zone at the moment.</div>`
+          }
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    loadDirectory();
+
+    setInterval(loadDirectory, 300000);
+  </script>
+</body>
+</html>
