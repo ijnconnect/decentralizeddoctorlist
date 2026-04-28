@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Doctor Zone Directory</title>
+  <title>Follow-Up Doctor Directory</title>
 
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f5f8fb;
+      background: #f4f7f9;
       color: #0b1f3a;
     }
 
@@ -22,12 +22,11 @@
 
     header h1 {
       margin: 0;
-      font-size: 34px;
-      letter-spacing: 1px;
+      font-size: 32px;
     }
 
     header p {
-      margin-top: 10px;
+      margin: 10px 0 0;
       font-size: 18px;
     }
 
@@ -55,12 +54,15 @@
     }
 
     .zone-title {
-      background: #063f34;
       color: white;
       padding: 18px 24px;
       font-size: 24px;
       font-weight: bold;
     }
+
+    .az1 { background: #003b71; }
+    .az2 { background: #006b5f; }
+    .bz2 { background: #5b2c83; }
 
     table {
       width: 100%;
@@ -95,6 +97,13 @@
       font-size: 18px;
     }
 
+    .last-updated {
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      margin-top: 20px;
+    }
+
     footer {
       text-align: center;
       padding: 25px;
@@ -106,11 +115,19 @@
 
     @media (max-width: 600px) {
       header h1 {
-        font-size: 26px;
+        font-size: 25px;
+      }
+
+      header p {
+        font-size: 15px;
       }
 
       table {
         font-size: 16px;
+      }
+
+      th, td {
+        padding: 12px;
       }
 
       .zone-title {
@@ -121,6 +138,7 @@
 </head>
 
 <body>
+
   <header>
     <h1>FOLLOW-UP DOCTOR DIRECTORY</h1>
     <p>Please check your doctor, zone and clinic room before proceeding.</p>
@@ -131,7 +149,9 @@
       Doctor locations may change daily. Kindly confirm your details before proceeding.
     </div>
 
-    <div id="directory"></div>
+    <div id="directory">Loading doctor directory...</div>
+
+    <div class="last-updated" id="lastUpdated"></div>
   </div>
 
   <footer>
@@ -142,40 +162,89 @@
     const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTqbhQEodWD8thq2skUS_ky52tR7iRye1qLdVQyEz9NAB5vvJmy5kH8OTtA0yrNIhT9__V8yBwbzmAG/pub?output=csv";
 
     const zones = [
-      "OPD A Zone 1",
-      "OPD A Zone 2",
-      "OPD B Zone 2"
+      {
+        name: "OPD A Zone 1",
+        className: "az1",
+        aliases: ["OPD A Zone 1", "AZ1", "A Zone 1"]
+      },
+      {
+        name: "OPD A Zone 2",
+        className: "az2",
+        aliases: ["OPD A Zone 2", "AZ2", "A Zone 2"]
+      },
+      {
+        name: "OPD B Zone 2",
+        className: "bz2",
+        aliases: ["OPD B Zone 2", "BZ2", "B Zone 2"]
+      }
     ];
 
     async function loadDirectory() {
       try {
-        const response = await fetch(SHEET_CSV_URL);
+        const response = await fetch(SHEET_CSV_URL + "&cacheBust=" + Date.now());
         const csvText = await response.text();
         const data = parseCSV(csvText);
 
         const activeDoctors = data.filter(row =>
-          row["Status"] &&
-          row["Status"].toLowerCase().trim() === "active"
+          clean(row["Status"]).toLowerCase() === "active"
         );
 
         renderDirectory(activeDoctors);
+
+        document.getElementById("lastUpdated").innerText =
+          "Last updated: " + new Date().toLocaleString("en-MY");
+
       } catch (error) {
         document.getElementById("directory").innerHTML =
           "<p>Unable to load doctor directory. Please contact staff for assistance.</p>";
       }
     }
 
+    function clean(value) {
+      return value ? value.trim() : "";
+    }
+
     function parseCSV(text) {
-      const rows = text.trim().split("\n").map(row => row.split(","));
-      const headers = rows.shift().map(h => h.trim());
+      const rows = text.trim().split(/\r?\n/).map(row => parseCSVRow(row));
+      const headers = rows.shift().map(header => clean(header));
 
       return rows.map(row => {
         let obj = {};
         headers.forEach((header, index) => {
-          obj[header] = row[index] ? row[index].trim() : "";
+          obj[header] = clean(row[index]);
         });
         return obj;
       });
+    }
+
+    function parseCSVRow(row) {
+      const result = [];
+      let current = "";
+      let insideQuotes = false;
+
+      for (let i = 0; i < row.length; i++) {
+        const char = row[i];
+
+        if (char === '"') {
+          insideQuotes = !insideQuotes;
+        } else if (char === "," && !insideQuotes) {
+          result.push(current);
+          current = "";
+        } else {
+          current += char;
+        }
+      }
+
+      result.push(current);
+      return result;
+    }
+
+    function matchesZone(rowZone, zone) {
+      const cleanedRowZone = clean(rowZone).toLowerCase();
+
+      return zone.aliases.some(alias =>
+        cleanedRowZone === alias.toLowerCase()
+      );
     }
 
     function renderDirectory(data) {
@@ -183,13 +252,13 @@
       container.innerHTML = "";
 
       zones.forEach(zone => {
-        const doctors = data.filter(row => row["Zone"] === zone);
+        const doctors = data.filter(row => matchesZone(row["Zone"], zone));
 
         const card = document.createElement("div");
         card.className = "zone-card";
 
         card.innerHTML = `
-          <div class="zone-title">${zone}</div>
+          <div class="zone-title ${zone.className}">${zone.name}</div>
           ${
             doctors.length > 0
               ? `
@@ -203,8 +272,8 @@
                   <tbody>
                     ${doctors.map(doc => `
                       <tr>
-                        <td>${doc["Doctor Name"]}</td>
-                        <td class="room">${doc["Room"]}</td>
+                        <td>${doc["Doctor Name"] || "-"}</td>
+                        <td class="room">${doc["Room"] || "-"}</td>
                       </tr>
                     `).join("")}
                   </tbody>
@@ -220,7 +289,9 @@
 
     loadDirectory();
 
+    // Auto refresh every 5 minutes
     setInterval(loadDirectory, 300000);
   </script>
+
 </body>
 </html>
