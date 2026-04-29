@@ -1,172 +1,416 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Follow-Up Doctor Directory</title>
 
-<title>Follow-Up Directory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
 
-<style>
-body {
-  margin: 0;
-  font-family: 'Figtree', sans-serif;
-  background: #f4f7fb;
-}
+    body {
+      margin: 0;
+      font-family: "Figtree", Arial, sans-serif;
+      background: #f4f7fb;
+      color: #10233f;
+    }
 
-header {
-  background: linear-gradient(135deg, #082b5f, #006b6f);
-  color: white;
-  padding: 30px;
-  text-align: center;
-}
+    header {
+      background: linear-gradient(135deg, #082b5f, #006b6f);
+      color: white;
+      padding: 34px 20px;
+      text-align: center;
+    }
 
-h1 {
-  margin: 0;
-  font-size: 32px;
-}
+    header h1 {
+      margin: 0;
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
 
-.container {
-  max-width: 1100px;
-  margin: 30px auto;
-  padding: 20px;
-}
+    header p {
+      margin: 10px 0 0;
+      font-size: 18px;
+      font-weight: 500;
+      opacity: 0.95;
+    }
 
-.zone-card {
-  background: white;
-  border-radius: 20px;
-  margin-bottom: 25px;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-}
+    .container {
+      max-width: 1100px;
+      margin: 28px auto;
+      padding: 0 18px;
+    }
 
-.zone-title {
-  padding: 20px;
-  font-size: 24px;
-  font-weight: 800;
-  color: white;
-  text-align: center;
-}
+    .date-card {
+      background: white;
+      border-radius: 20px;
+      padding: 22px 24px;
+      margin-bottom: 22px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+      border-left: 8px solid #b58a2a;
+    }
 
-.az1 { background:#082b5f; }
-.az2 { background:#006b6f; }
-.bz2 { background:#56318d; }
+    .date-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
 
-.section {
-  padding: 20px;
-}
+    .date-text {
+      margin-top: 6px;
+      font-size: 28px;
+      font-weight: 900;
+      color: #082b5f;
+    }
 
-.section-title {
-  font-size: 18px;
-  font-weight: 800;
-  margin-bottom: 10px;
-  color: #555;
-}
+    .notice {
+      background: #fff8e8;
+      border: 1px solid #f1d79b;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      border-radius: 16px;
+      font-size: 17px;
+      font-weight: 600;
+      color: #5b4212;
+    }
 
-.item {
-  padding: 12px 0;
-  border-bottom: 1px solid #eee;
-  font-size: 18px;
-  font-weight: 600;
-}
+    .zone-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
 
-.item:last-child {
-  border-bottom: none;
-}
+    .zone-card {
+      background: white;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+      min-height: 320px;
+    }
 
-footer {
-  text-align:center;
-  padding:20px;
-  background:#10233f;
-  color:white;
-}
+    .zone-title {
+      color: white;
+      padding: 22px;
+      font-size: 24px;
+      font-weight: 900;
+      text-align: center;
+    }
 
-</style>
+    .az1 { background: #082b5f; }
+    .az2 { background: #006b6f; }
+    .bz2 { background: #56318d; }
+
+    .section {
+      padding: 18px 20px 8px;
+    }
+
+    .section + .section {
+      padding-top: 8px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .name-row {
+      padding: 14px 0;
+      border-bottom: 1px solid #e8edf3;
+    }
+
+    .name-row:last-child {
+      border-bottom: none;
+    }
+
+    .name-text {
+      font-size: 21px;
+      font-weight: 800;
+      color: #10233f;
+      line-height: 1.25;
+    }
+
+    .service-text {
+      font-size: 19px;
+      font-weight: 700;
+      color: #42526b;
+      line-height: 1.25;
+    }
+
+    .empty {
+      padding: 28px 20px;
+      color: #777;
+      font-size: 17px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .last-updated {
+      text-align: center;
+      font-size: 14px;
+      color: #667;
+      margin-top: 22px;
+      font-weight: 600;
+    }
+
+    footer {
+      text-align: center;
+      padding: 26px 18px;
+      background: #10233f;
+      color: white;
+      margin-top: 36px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 900px) {
+      .zone-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 26px; }
+      header p { font-size: 15px; }
+      .date-text { font-size: 23px; }
+      .zone-title { font-size: 21px; }
+      .name-text { font-size: 20px; }
+      .service-text { font-size: 18px; }
+    }
+  </style>
 </head>
 
 <body>
 
-<header>
-  <h1>FOLLOW-UP DOCTOR DIRECTORY</h1>
-</header>
+  <header>
+    <h1>DOCTOR DIRECTORY FOR FOLLOW-UP CLINIC</h1>
+    <p>Please check your doctor, clinic or service and assigned zone before proceeding.</p>
+  </header>
 
-<div class="container" id="directory"></div>
+  <div class="container">
+    <div class="date-card">
+      <div class="date-label">Today’s Directory</div>
+      <div class="date-text" id="displayDate">Loading date...</div>
+    </div>
 
-<footer>
-Need help? Please approach our staff.
-</footer>
+    <div class="notice">
+      Doctor, clinic and service zone assignments may change daily. Kindly confirm your details before proceeding.
+    </div>
 
-<script>
+    <div id="directory">Loading directory...</div>
 
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTqbhQEodWD8thq2skUS_ky52tR7iRye1qLdVQyEz9NAB5vvJmy5kH8OTtA0yrNIhT9__V8yBwbzmAG/pub?output=csv";
+    <div class="last-updated" id="lastUpdated"></div>
+  </div>
 
-const zones = [
-  {name:"OPD A Zone 1", class:"az1"},
-  {name:"OPD A Zone 2", class:"az2"},
-  {name:"OPD B Zone 2", class:"bz2"}
-];
+  <footer>
+    Need assistance? Please approach our staff. Thank you for your cooperation.
+  </footer>
 
-function isDoctor(name){
-  return name.toLowerCase().includes("dr") ||
-         name.toLowerCase().includes("dato") ||
-         name.toLowerCase().includes("prof");
-}
+  <script>
+    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTqbhQEodWD8thq2skUS_ky52tR7iRye1qLdVQyEz9NAB5vvJmy5kH8OTtA0yrNIhT9__V8yBwbzmAG/pub?output=csv";
 
-async function loadData(){
-  const res = await fetch(SHEET_URL + "&t=" + Date.now());
-  const text = await res.text();
+    const zones = [
+      {
+        name: "OPD A Zone 1",
+        className: "az1",
+        aliases: ["OPD A Zone 1", "AZ1", "A Zone 1"]
+      },
+      {
+        name: "OPD A Zone 2",
+        className: "az2",
+        aliases: ["OPD A Zone 2", "AZ2", "A Zone 2"]
+      },
+      {
+        name: "OPD B Zone 2",
+        className: "bz2",
+        aliases: ["OPD B Zone 2", "BZ2", "B Zone 2"]
+      }
+    ];
 
-  const rows = text.split("\n").map(r => r.split(","));
-  const headers = rows.shift();
+    function getTodayMY() {
+      return new Date().toLocaleDateString("en-GB", {
+        timeZone: "Asia/Kuala_Lumpur",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+      });
+    }
 
-  const data = rows.map(r=>{
-    let obj = {};
-    headers.forEach((h,i)=> obj[h.trim()] = r[i]);
-    return obj;
-  });
+    function getDisplayDate() {
+      return new Date().toLocaleDateString("en-MY", {
+        timeZone: "Asia/Kuala_Lumpur",
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      });
+    }
 
-  render(data);
-}
+    async function loadDirectory() {
+      try {
+        document.getElementById("displayDate").innerText = getDisplayDate();
 
-function render(data){
-  const container = document.getElementById("directory");
-  container.innerHTML = "";
+        const response = await fetch(SHEET_CSV_URL + "&cacheBust=" + Date.now());
+        const csvText = await response.text();
+        const data = parseCSV(csvText);
 
-  zones.forEach(z => {
+        const today = getTodayMY();
 
-    const zoneData = data.filter(d =>
-      d["Zone"] && d["Zone"].includes(z.name) &&
-      d["Status"] === "Active"
-    );
+        const activeItems = data.filter(row =>
+          clean(row["Status"]).toLowerCase() === "active" &&
+          clean(row["Date"]) === today
+        );
 
-    const doctors = zoneData.filter(d => isDoctor(d["Doctor/Clinic Name"]));
-    const clinics = zoneData.filter(d => !isDoctor(d["Doctor/Clinic Name"]));
+        renderDirectory(activeItems);
 
-    const card = document.createElement("div");
-    card.className = "zone-card";
+        document.getElementById("lastUpdated").innerText =
+          "Last updated: " + new Date().toLocaleString("en-MY", {
+            timeZone: "Asia/Kuala_Lumpur"
+          });
 
-    card.innerHTML = `
-      <div class="zone-title ${z.class}">${z.name}</div>
+      } catch (error) {
+        document.getElementById("directory").innerHTML =
+          "<p>Unable to load directory. Please contact staff for assistance.</p>";
+      }
+    }
 
-      <div class="section">
-        <div class="section-title">Doctors</div>
-        ${doctors.map(d => `<div class="item">${d["Doctor/Clinic Name"]}</div>`).join("")}
-      </div>
+    function clean(value) {
+      return value ? value.trim() : "";
+    }
 
-      <div class="section">
-        <div class="section-title">Clinics & Services</div>
-        ${clinics.map(d => `<div class="item">${d["Doctor/Clinic Name"]}</div>`).join("")}
-      </div>
-    `;
+    function parseCSV(text) {
+      const rows = text.trim().split(/\r?\n/).map(row => parseCSVRow(row));
+      const headers = rows.shift().map(header => clean(header));
 
-    container.appendChild(card);
-  });
-}
+      return rows.map(row => {
+        let obj = {};
+        headers.forEach((header, index) => {
+          obj[header] = clean(row[index]);
+        });
+        return obj;
+      });
+    }
 
-loadData();
+    function parseCSVRow(row) {
+      const result = [];
+      let current = "";
+      let insideQuotes = false;
 
-</script>
+      for (let i = 0; i < row.length; i++) {
+        const char = row[i];
+
+        if (char === '"') {
+          insideQuotes = !insideQuotes;
+        } else if (char === "," && !insideQuotes) {
+          result.push(current);
+          current = "";
+        } else {
+          current += char;
+        }
+      }
+
+      result.push(current);
+      return result;
+    }
+
+    function matchesZone(rowZone, zone) {
+      const cleanedRowZone = clean(rowZone).toLowerCase();
+      return zone.aliases.some(alias => cleanedRowZone === alias.toLowerCase());
+    }
+
+    function getDirectoryName(row) {
+      return clean(row["Doctor/Clinic/Service"]);
+    }
+
+    function isDoctor(name) {
+      const lower = clean(name).toLowerCase();
+
+      return (
+        lower.includes("dr ") ||
+        lower.startsWith("dr.") ||
+        lower.includes("dato") ||
+        lower.includes("datuk") ||
+        lower.includes("prof")
+      );
+    }
+
+    function sortByName(a, b) {
+      return getDirectoryName(a).localeCompare(getDirectoryName(b), "en", {
+        sensitivity: "base"
+      });
+    }
+
+    function renderDirectory(data) {
+      const container = document.getElementById("directory");
+      container.innerHTML = "";
+
+      const grid = document.createElement("div");
+      grid.className = "zone-grid";
+
+      zones.forEach(zone => {
+        const zoneItems = data.filter(row => matchesZone(row["Zone"], zone));
+
+        const doctors = zoneItems
+          .filter(row => isDoctor(getDirectoryName(row)))
+          .sort(sortByName);
+
+        const services = zoneItems
+          .filter(row => !isDoctor(getDirectoryName(row)))
+          .sort(sortByName);
+
+        const card = document.createElement("div");
+        card.className = "zone-card";
+
+        card.innerHTML = `
+          <div class="zone-title ${zone.className}">${zone.name}</div>
+          ${
+            zoneItems.length > 0
+              ? `
+                ${doctors.length > 0 ? `
+                  <div class="section">
+                    <div class="section-title">Doctors</div>
+                    ${doctors.map(item => `
+                      <div class="name-row">
+                        <div class="name-text">${getDirectoryName(item)}</div>
+                      </div>
+                    `).join("")}
+                  </div>
+                ` : ""}
+
+                ${services.length > 0 ? `
+                  <div class="section">
+                    <div class="section-title">Clinics & Services</div>
+                    ${services.map(item => `
+                      <div class="name-row">
+                        <div class="service-text">${getDirectoryName(item)}</div>
+                      </div>
+                    `).join("")}
+                  </div>
+                ` : ""}
+              `
+              : `<div class="empty">No doctor, clinic or service listed for this zone at the moment.</div>`
+          }
+        `;
+
+        grid.appendChild(card);
+      });
+
+      container.appendChild(grid);
+    }
+
+    loadDirectory();
+    setInterval(loadDirectory, 300000);
+  </script>
 
 </body>
 </html>
